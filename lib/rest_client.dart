@@ -1,3 +1,4 @@
+import 'package:clean_data/config/constant.dart';
 import 'package:dio/dio.dart';
 
 import 'response/standard_response.dart';
@@ -18,7 +19,8 @@ class RestClient {
     return StandardResponse.fromJson(response.data);
   }
   Future<StandardResponse> fbLogin(String fbId, String firstName, String lastName) async {
-    Response response = await _dio.post("/api/v1/users/userLogin", data: {
+    print(Constants.instance.baseURL+"/api/v1/users/fblogin");
+    Response response = await _dio.post("/api/v1/users/fblogin", data: {
       "fbId": fbId,
       "firstName": firstName,
       "lastName":lastName

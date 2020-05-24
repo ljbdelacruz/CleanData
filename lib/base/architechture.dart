@@ -5,14 +5,12 @@
 
 import 'dart:async';
 
+import 'package:clean_data/model/cart.dart';
+import 'package:clean_data/model/category.dart';
+import 'package:clean_data/model/image_storage.dart';
+import 'package:clean_data/model/product.dart';
+import 'package:clean_data/model/user_session.dart';
 import 'package:flutter/widgets.dart';
-
-import 'model/cart.dart';
-import 'model/image_storage.dart';
-import 'model/product.dart';
-import 'model/user_session.dart';
-import 'model/category.dart';
-
 
 abstract class CleanUseCase {}
 

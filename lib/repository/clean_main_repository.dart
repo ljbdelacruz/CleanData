@@ -2,9 +2,8 @@
 
 
 
+import 'package:clean_data/base/architechture.dart';
 import 'package:sembast/sembast.dart';
-
-import '../architechture.dart';
 import '../db/category_db.dart';
 import '../db/user_session_db.dart';
 import '../mapper/cart_mapper.dart';
@@ -49,12 +48,16 @@ class CleanMainRepository extends CleanRepository {
     Future<UserSession> fbLogin(String fbId, String firstname, String lastname) async {
       var data=await restClient.fbLogin(fbId, firstname, lastname);
       sessionDb.save(data.data);
+      print("Returning user mapped");
+      print(data.data.toString());
       return userSMapper.fromMap(data.data);
     }
     @override
     Future<UserSession> login(String email, String password) async {
       // TODO: implement login
       var data=await restClient.login(email, password);
+      print("Auth client");
+      print(data.data.toString());
       sessionDb.save(data.data);
       return userSMapper.fromMap(data.data);
     }

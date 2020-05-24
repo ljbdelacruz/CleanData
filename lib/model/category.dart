@@ -1,7 +1,4 @@
-
-
-
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 
 class FoodyCategory extends CleanModel{
   String id;

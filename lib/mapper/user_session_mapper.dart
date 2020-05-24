@@ -2,7 +2,7 @@
 
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 import '../model/user_session.dart';
 
 class UserSessionMapper extends CleanMapper<UserSession> {
@@ -10,7 +10,10 @@ class UserSessionMapper extends CleanMapper<UserSession> {
   UserSession fromMap(Map<String, dynamic> map) {
     // TODO: implement fromMap
     UserTokenSessionMapper tmapper=UserTokenSessionMapper();
-    return UserSession(map["firstname"], map["lastname"], map["birthDate"], tmapper.fromMap(map["token"]));
+    if(map != null){
+      return UserSession(map["firstName"], map["lastName"], map["birthDate"], tmapper.fromMap(map["token"]));
+    }
+    return UserSession.empty();
   }
   @override
   Map<String, dynamic> toMap(UserSession object) {
@@ -26,7 +29,11 @@ class UserTokenSessionMapper extends CleanMapper<UserTokenSession>{
   @override
   UserTokenSession fromMap(Map<String, dynamic> map) {
     // TODO: implement fromMap
-    return UserTokenSession(map["token"].toString(), map["type"].toString());
+    if(map != null){
+      return UserTokenSession(map["token"].toString(), map["type"].toString());
+    }
+    return UserTokenSession.empty();
+ 
   }
   @override
   Map<String, dynamic> toMap(UserTokenSession object) {

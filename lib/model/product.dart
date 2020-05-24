@@ -3,7 +3,7 @@
 
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 
 class Product extends CleanModel{
   String id;

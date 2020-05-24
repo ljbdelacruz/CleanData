@@ -1,4 +1,4 @@
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 
 class UserSession extends CleanModel {
   String firstname;

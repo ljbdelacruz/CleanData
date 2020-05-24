@@ -1,7 +1,7 @@
 
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 import '../model/image_storage.dart';
 
 class ImageStorageMapper extends CleanMapper<ImageStorage>{

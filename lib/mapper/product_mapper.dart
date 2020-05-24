@@ -1,7 +1,7 @@
 
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 import '../model/product.dart';
 
 class ProductMapper extends CleanMapper<Product>{

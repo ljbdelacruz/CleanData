@@ -1,7 +1,7 @@
 
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
 
 class ImageStorage extends CleanModel{
   String id;

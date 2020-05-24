@@ -1,6 +1,7 @@
 
 
-import '../architechture.dart';
+import 'package:clean_data/base/architechture.dart';
+
 import '../model/user_session.dart';
 
 class LoginUseCase extends CleanUseCase {
