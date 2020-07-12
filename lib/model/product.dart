@@ -20,5 +20,7 @@ class Product extends CleanModel{
   bool isAvailable;
   double longitude;
   double latitude;
+  List<String> thumbnails = [];
+
   Product(this.id, this.title, this.description, this.price, this.ownerId, this.storeId, this.productReview, this.category, this.tags, this.isAllowSubscription, this.mainImage, this.isAvailable, this.longitude, this.latitude);
 }
