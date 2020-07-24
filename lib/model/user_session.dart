@@ -12,6 +12,13 @@ class UserSession extends CleanModel {
     this.birthDate="";
     this.token=UserTokenSession.empty();
   }
+  UserSession.dummy(){
+    this.firstname="Dummy 1";
+    this.lastname="Dummy";
+    this.birthDate="05 Dec 1994";
+    this.token=UserTokenSession.empty();
+  }
+
 }
 
 class UserTokenSession extends CleanModel {

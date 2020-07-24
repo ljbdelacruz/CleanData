@@ -35,7 +35,7 @@ abstract class CleanPage extends StatefulWidget {
 }
 
 abstract class CleanPageState<P extends CleanPresenter>
-    extends State<CleanPage> {
+    extends State<CleanPage> with TickerProviderStateMixin {
   P presenter;
 
   P createPresenter();
