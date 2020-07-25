@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:clean_data/config/constant.dart';
 import 'package:dio/dio.dart';
 
@@ -10,6 +12,106 @@ class RestClient {
   bool hasToken() {
     return _dio.options.headers.containsKey("Authorization");
   }
+  //TODO: livingsmart api client
+    Future<StandardResponse> lSmartLogin(String email, String password, bool remember_me) async {
+      Response response = await _dio.post("/login", data: {
+        "email": email,
+        "password": password,
+        "remember_me":remember_me
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> lSmartRegister(String name, String email, String password, String rpass, String mobile) async {
+      Response response = await _dio.post("/register", data: {
+        "name":name,
+        "email": email,
+        "password": password,
+        "mobile": mobile,
+        "password_confirmation": rpass
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> logout() async {
+      Response response = await _dio.get("/logout");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> userInfo() async {
+      Response response = await _dio.get("/user/info");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getStore() async {
+      Response response = await _dio.get("/store");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> addProductToStore(int product_id) async {
+      Response response = await _dio.post("/store/add", data: {
+        "product_id":product_id,
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> productRemoveToStore(int product_id) async {
+      Response response = await _dio.delete("/store/remove", data: {
+        "product_id":product_id,
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> storeUpdate(String name, String rate, String address, String phone, String mobile, String information, String delivery_fee, String default_tax, String latitude, String longitude, String closed, String delivery) async {
+      Response response = await _dio.delete("/store/update", data: {
+        "name":name,
+        "rate":rate,
+        "address":address,
+        "phone":phone,
+        "mobile":mobile,
+        "information":information,
+        "delivery_fee":delivery_fee,
+        "default_tax":default_tax,
+        "latitude":latitude,
+        "longitude":longitude,
+        "closed":closed,
+        "delivery":delivery
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getProducts() async {
+      Response response = await _dio.get("/global/products");
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
+
+
+    Future<StandardResponse> uploadStoreFrontImage(File image) async {
+      MultipartFile imageMF = await MultipartFile.fromFile(image.path);
+      var data = FormData.fromMap({
+        "image": imageMF,
+      });
+      Response response = await _dio.post("/store/image", data: data);
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /********Users Authentication********/
   Future<StandardResponse> login(String email, String password) async {
     Response response = await _dio.post("/api/v1/users/userLogin", data: {

@@ -70,6 +70,7 @@ class DataInstantiator extends CleanDataInstantiator {
             options.headers.addAll(
               {
                 "Authorization": Constants.instance.session.token.type+" "+Constants.instance.session.token.token,
+                "X-Requested-With":"XMLHttpRequest"
               },
             );
           }

@@ -3,6 +3,11 @@
 
 
 import 'package:clean_data/base/architechture.dart';
+import 'package:clean_data/config/constant.dart';
+import 'package:clean_data/mapper/user_session_data_mapper.dart';
+import 'package:clean_data/mapper/user_store_mapper.dart';
+import 'package:clean_data/model/userstore.dart';
+import 'package:clean_data/response/standard_response.dart';
 import 'package:sembast/sembast.dart';
 import '../db/category_db.dart';
 import '../db/user_session_db.dart';
@@ -24,10 +29,15 @@ class CleanMainRepository extends CleanRepository {
 
 
     UserSessionMapper userSMapper= UserSessionMapper();
+    UserSessionDataMapper userSDataMapper = UserSessionDataMapper();
+    UserInfoSessionMapper userInfoSessionMapper = UserInfoSessionMapper();
+    LivingSmartStoresMapper livingSmartStoreMapper = LivingSmartStoresMapper();
+    ProductMapper productMapper= ProductMapper();
+
+
     CategoryMapper categoryMapper = CategoryMapper();
     CartMapper cartMapper = CartMapper();
     CartItemMapper cartItemMapper = CartItemMapper();
-    ProductMapper productMapper= ProductMapper();
     ImageStorageMapper imageStorageMapper = ImageStorageMapper();
 
     /* -------------------------------- Databases ------------------------------- */
@@ -38,6 +48,80 @@ class CleanMainRepository extends CleanRepository {
       this.sessionDb = UserSessionDb(this.db);
       this.categoryDb = CategoryDb(this.db);
     }
+
+
+    @override
+    Future<UserSessionData> lsLogin(String email, String password, remember_me) async{
+      // TODO: implement getUserLogin
+      var data=await restClient.lSmartLogin(email, password, remember_me);
+      var response = userSDataMapper.fromMap(data.data);
+      Constants.instance.session=response;
+      return response;
+    }
+    @override
+    Future<UserInfoSession> lsRegister(String name, String email, String password, String rpass, String mobile) async{
+      var data=await restClient.lSmartRegister(name, email, password, rpass, mobile);
+      var response = userInfoSessionMapper.fromMapRegister(data.data);
+      return response;
+    }
+    Future<StandardResponse> logout()async{
+      var data=await restClient.logout();
+      return data.data;
+    }
+    Future<UserInfoSession> userInfo()async{
+      var data=await restClient.userInfo();
+      return userInfoSessionMapper.fromMap(data.data);
+    }
+  Future<LivingSmartStores> getStore() async{
+      var data=await restClient.getStore();
+      var storeInfo = livingSmartStoreMapper.fromMap(data.data["store_info"]);
+      storeInfo.products = [];
+      data.data["products"].forEach((product){
+        storeInfo.products.add(productMapper.fromMap(product));
+      });
+      return storeInfo;
+  }
+  Future<bool> addProductToStore(int addProductToStore)async{
+      var data=await restClient.addProductToStore(addProductToStore);
+      return data.success;
+  }
+  Future<bool> productRemoveToStore(int addProductToStore)async{
+      var data=await restClient.productRemoveToStore(addProductToStore);
+      return data.success;
+  }
+  Future<bool> storeUpdate(String name, String rate, String address, String phone, String mobile, String information, String delivery_fee, String default_tax, String latitude, String longitude, String closed, String delivery) async{
+    var data=await restClient.storeUpdate(name, rate, address, phone, mobile, information, delivery_fee, default_tax, latitude, longitude, closed, delivery);
+    return data.success;
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @override
     Future<UserSession> getUserLogin() {

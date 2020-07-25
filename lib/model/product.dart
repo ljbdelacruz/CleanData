@@ -6,21 +6,19 @@
 import 'package:clean_data/base/architechture.dart';
 
 class Product extends CleanModel{
-  String id;
-  String title;
-  String description;
+  int id;
+  String image;
+  String name;
+  String weight_size;
+  int stock_count;
   double price;
-  String ownerId;
-  String storeId;
-  double productReview;
+  double discounted_price;
+  String description;
+  int featured;
   String category;
-  String tags;
-  bool isAllowSubscription;
-  String mainImage;
-  bool isAvailable;
-  double longitude;
-  double latitude;
-  List<String> thumbnails = [];
+  int deliverable;
 
-  Product(this.id, this.title, this.description, this.price, this.ownerId, this.storeId, this.productReview, this.category, this.tags, this.isAllowSubscription, this.mainImage, this.isAvailable, this.longitude, this.latitude);
+  Product({this.id=0, this.image="",this.name="", this.weight_size="", this.stock_count=0, this.price=0.0, this.discounted_price=0.0, this.description="", this.featured=0, this.category, this.deliverable=0});
 }
+
+ 

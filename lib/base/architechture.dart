@@ -10,6 +10,8 @@ import 'package:clean_data/model/category.dart';
 import 'package:clean_data/model/image_storage.dart';
 import 'package:clean_data/model/product.dart';
 import 'package:clean_data/model/user_session.dart';
+import 'package:clean_data/model/userstore.dart';
+import 'package:clean_data/response/standard_response.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class CleanUseCase {}
@@ -67,7 +69,7 @@ abstract class CleanPresenter {
     });
   }
 
-  @deprecated
+  // @deprecated
   void notify() {
     cleanPageState.setState(() {
       cleanPageState.presenter = this;
@@ -76,6 +78,17 @@ abstract class CleanPresenter {
 }
 
 abstract class CleanRepository {
+  Future<UserSessionData> lsLogin(String email, String password, remember_me);
+  Future<UserInfoSession> lsRegister(String name, String email, String password, String rpass, String mobile);
+  Future<StandardResponse> logout();
+  Future<UserInfoSession> userInfo();
+  Future<LivingSmartStores> getStore();
+  Future<bool> addProductToStore(int product_id);
+  Future<bool> productRemoveToStore(int product_id);
+  Future<bool> storeUpdate(String name, String rate, String address, String phone, String mobile, String information, String delivery_fee, String default_tax, String latitude, String longitude, String closed, String delivery);
+
+
+
   Future<UserSession> login(String email, String password);
   Future<UserSession> fbLogin(String fbId, String firstname, String lastname);
   Future<UserSession> userRegister(String firstName, String lastName, String email, String password);

@@ -18,3 +18,18 @@ class UserStoreMapper extends CleanMapper<UserStore> {
     return {"id":object.id, "ownerUUID":object.ownerUUID, "storeName":object.storeName, "storeLogo":object.storeLogo, "storeReview":object.storeReview, "updatedAt":object.updatedAt, "longitude":object.longitude, "latitude":object.latitude};
   }
 }
+
+
+
+class LivingSmartStoresMapper extends CleanMapper<LivingSmartStores> { 
+  @override
+  LivingSmartStores fromMap(Map<String, dynamic> map) {
+    return LivingSmartStores(id:map["id"], image:map["image"], name:map["name"]);
+  }
+
+  @override
+  Map<String, dynamic> toMap(LivingSmartStores object) {
+    // TODO: implement toMap
+    return {};
+  }
+}

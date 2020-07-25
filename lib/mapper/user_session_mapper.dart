@@ -30,10 +30,9 @@ class UserTokenSessionMapper extends CleanMapper<UserTokenSession>{
   UserTokenSession fromMap(Map<String, dynamic> map) {
     // TODO: implement fromMap
     if(map != null){
-      return UserTokenSession(map["token"].toString(), map["type"].toString());
+      return UserTokenSession(map["access_token"].toString(), map["token_type"].toString(), map["expires_at"].toString());
     }
     return UserTokenSession.empty();
- 
   }
   @override
   Map<String, dynamic> toMap(UserTokenSession object) {
