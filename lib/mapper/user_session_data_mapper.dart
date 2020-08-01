@@ -15,9 +15,9 @@ class UserSessionDataMapper extends CleanMapper<UserSessionData> {
     UserInfoSessionMapper userMapper = UserInfoSessionMapper();
     UserTokenSessionMapper tokenMapper = UserTokenSessionMapper();
     if(map != null){
-      var token = tokenMapper.fromMap(map["data"]["auth"]);
-      var user = userMapper.fromMap(map["data"]["user"]);
-      return UserSessionData(token, user, map["data"]["message"].toString());
+      var token = tokenMapper.fromMap(map["auth"]);
+      var user = userMapper.fromMap(map["user"]);
+      return UserSessionData(token, user, map["message"].toString());
     }
     return UserSessionData.empty();
   }

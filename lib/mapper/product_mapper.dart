@@ -8,7 +8,7 @@ class ProductMapper extends CleanMapper<Product>{
    @override
     Product fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-      return Product(id:map["id"], image:map["image"].toString(), name:map["name"].toString());
+      return Product.optional(id:map["id"], image:map["image"].toString(), name:map["name"].toString());
     }
     @override
     Map<String, dynamic> toMap(Product object) {

@@ -12,7 +12,7 @@ class RestClient {
   bool hasToken() {
     return _dio.options.headers.containsKey("Authorization");
   }
-  //TODO: livingsmart api client
+    //TODO: Authentication
     Future<StandardResponse> lSmartLogin(String email, String password, bool remember_me) async {
       Response response = await _dio.post("/login", data: {
         "email": email,
@@ -39,8 +39,14 @@ class RestClient {
       Response response = await _dio.get("/user/info");
       return StandardResponse.fromJson(response.data);
     }
+
+    //TODO: MStore
     Future<StandardResponse> getStore() async {
       Response response = await _dio.get("/store");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> loadEditStore() async {
+      Response response = await _dio.get("/store/edit");
       return StandardResponse.fromJson(response.data);
     }
     Future<StandardResponse> addProductToStore(int product_id) async {
@@ -77,10 +83,6 @@ class RestClient {
       return StandardResponse.fromJson(response.data);
     }
 
-
-
-
-
     Future<StandardResponse> uploadStoreFrontImage(File image) async {
       MultipartFile imageMF = await MultipartFile.fromFile(image.path);
       var data = FormData.fromMap({
@@ -89,6 +91,18 @@ class RestClient {
       Response response = await _dio.post("/store/image", data: data);
       return StandardResponse.fromJson(response.data);
     }
+
+
+    //TODO: CUSTOMER
+    Future<StandardResponse> getListAllStores() async {
+      Response response = await _dio.get("/stores/list");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getListAllStoresProduct(int storeId) async {
+      Response response = await _dio.get("/products/store/"+storeId.toString());
+      return StandardResponse.fromJson(response.data);
+    }
+
 
 
 
