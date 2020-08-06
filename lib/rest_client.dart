@@ -1,3 +1,5 @@
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:clean_data/config/constant.dart';
@@ -78,7 +80,7 @@ class RestClient {
       });
       return StandardResponse.fromJson(response.data);
     }
-    Future<StandardResponse> getProducts() async {
+    Future<StandardResponse> getProductsGlobal() async {
       Response response = await _dio.get("/global/products");
       return StandardResponse.fromJson(response.data);
     }
@@ -99,9 +101,94 @@ class RestClient {
       return StandardResponse.fromJson(response.data);
     }
     Future<StandardResponse> getListAllStoresProduct(int storeId) async {
-      Response response = await _dio.get("/products/store/"+storeId.toString());
+      Response response = await _dio.get("/store/"+storeId.toString());
       return StandardResponse.fromJson(response.data);
     }
+    Future<StandardResponse> getProductInfoByID(int id) async{
+      Response response = await _dio.get("/product/"+id.toString());
+      return StandardResponse.fromJson(response.data);
+    }
+
+      //Cart
+    Future<StandardResponse> getStoreProductCart(int storeId) async {
+      Response response = await _dio.get("/cart/store/"+storeId.toString());
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getStoresInCart() async {
+      Response response = await _dio.get("/cart/stores");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> addProductToCart(int storeId, int prodId, int quantity) async {
+      Response response = await _dio.post("/cart/add", data:jsonEncode({
+        "store_id":storeId,
+        "product_id":prodId,
+        "quantity":quantity
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> removeProductFromCart(int storeId, int prodId) async {
+      Response response = await _dio.delete("/cart/remove", data:jsonEncode({
+        "store_id":storeId,
+        "product_id":prodId,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> deleteStoreCart(int storeId) async {
+      Response response = await _dio.delete("/cart/delete", data:jsonEncode({
+        "store_id":storeId,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> checkoutCart() async{
+      Response response = await _dio.post("/cart/checkout");
+      return StandardResponse.fromJson(response.data);
+    }
+
+    //Address
+    Future<StandardResponse> addDeliveryAddress(String address, String lat, String lon, String desc, int isDefault) async{
+      Response response = await _dio.post("/customer/address", data:jsonEncode({
+        "address":address,
+        "longitude":lon,
+        "latitude":lat,
+        "description":desc,
+        "isDefault":isDefault
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> updateDeliveryAddress(int addressId,String address, String lat, String lon, String desc, int isDefault) async{
+      Response response = await _dio.put("/customer/address", data:jsonEncode({
+        "address_id":addressId,
+        "address":address,
+        "longitude":lon,
+        "latitude":lat,
+        "description":desc,
+        "isDefault":isDefault
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getCustomerAddressByID(int id) async{
+      Response response = await _dio.get("/customer/address"+id.toString());
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getCustomerDefaultAddress() async{
+      Response response = await _dio.get("/customer/address");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> listCustomerAddresses() async{
+      Response response = await _dio.get("/customer/addresses");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> deleteCustomerAddress(int id) async{
+      Response response = await _dio.delete("/customer/addresses", data:jsonEncode({
+        "address_id":id
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
+
+
 
 
 

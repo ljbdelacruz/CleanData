@@ -8,7 +8,14 @@ class ProductMapper extends CleanMapper<Product>{
    @override
     Product fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-      return Product.optional(id:map["id"], image:map["image"].toString(), name:map["name"].toString());
+      try{
+        print(map.toString());
+        return Product.optional(id: int.parse(map["id"].toString()), image: map["image"].toString(), name:map["name"].toString(), weight_size:map["weight_size"].toString(), description:map["description"].toString(), stock_count: int.parse(map["stock_count"].toString()), price: double.parse(map["price"]));
+      }catch(e){
+        print("Error mapping from Product");
+        print(e.toString());
+        throw e;
+      }
     }
     @override
     Map<String, dynamic> toMap(Product object) {

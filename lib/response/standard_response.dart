@@ -9,4 +9,9 @@ class StandardResponse {
     data = json["data"];
     this.success=json["success"];
   }
+  StandardResponse.fromJsonErr(Map<String, dynamic> json){
+    this.message = json["message"];
+    this.success=json["success"];
+  }
+
 }

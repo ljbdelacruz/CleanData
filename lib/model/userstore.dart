@@ -22,6 +22,12 @@ class UserStore extends CleanModel {
   UserStore(this.id, this.ownerUUID, this.storeName, this.storeLogo, this.storeReview, this.updatedAt, this.longitude, this.latitude);
 }
 
+class LivingSmartStoreInfo extends CleanModel{
+  LivingSmartStores store_info;
+  List<Product> products = [];
+  LivingSmartStoreInfo(this.store_info, this.products);
+}
+
 
 
 class LivingSmartStores extends CleanModel {

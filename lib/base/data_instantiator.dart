@@ -5,8 +5,14 @@ import 'package:clean_data/base/clean_app.dart';
 import 'package:clean_data/config/constant.dart';
 import 'package:clean_data/repository/clean_main_repository.dart';
 import 'package:clean_data/rest_client.dart';
+import 'package:clean_data/usecase/address_use_case.dart';
+import 'package:clean_data/usecase/customer_use_case.dart';
 import 'package:clean_data/usecase/fb_login_use_case.dart';
 import 'package:clean_data/usecase/login_use_case.dart';
+import 'package:clean_data/usecase/mstore_use_case.dart';
+import 'package:clean_data/usecase/registration_use_case.dart';
+import 'package:clean_data/usecase/unauthenticated_use_case.dart';
+import 'package:clean_data/usecase/user_auth_use_case.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
@@ -31,12 +37,19 @@ class DataInstantiator extends CleanDataInstantiator {
     GetIt.I.registerSingleton<Dio>(dio);
     GetIt.I.registerSingleton<Database>(database);
 
-
-    GetIt.I.registerLazySingleton<LoginUseCase>(
-        () => LoginUseCase(repository));
-    GetIt.I.registerLazySingleton<FBLoginUseCase>(
-        () => FBLoginUseCase(repository));
-
+    GetIt.I.registerLazySingleton<UserAuthUseCase>(
+        () => UserAuthUseCase(repository));
+    GetIt.I.registerLazySingleton<RegistrationUseCase>(
+        () => RegistrationUseCase(repository));
+    GetIt.I.registerLazySingleton<MStoreUseCase>(
+        () => MStoreUseCase(repository));
+    GetIt.I.registerLazySingleton<CustomerUseCase>(
+        () => CustomerUseCase(repository));
+    GetIt.I.registerLazySingleton<UnauthenticatedUseCase>(
+        () => UnauthenticatedUseCase(repository));
+    GetIt.I.registerLazySingleton<AddressUseCase>(
+        () => AddressUseCase(repository));
+    
   }
 
   Future<Database> getDatabase() async {

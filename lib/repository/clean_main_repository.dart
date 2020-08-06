@@ -2,10 +2,14 @@
 
 
 
+import 'dart:io';
+
 import 'package:clean_data/base/architechture.dart';
 import 'package:clean_data/config/constant.dart';
+import 'package:clean_data/mapper/address_mapper.dart';
 import 'package:clean_data/mapper/user_session_data_mapper.dart';
 import 'package:clean_data/mapper/user_store_mapper.dart';
+import 'package:clean_data/model/address.dart';
 import 'package:clean_data/model/userstore.dart';
 import 'package:clean_data/response/standard_response.dart';
 import 'package:sembast/sembast.dart';
@@ -33,11 +37,15 @@ class CleanMainRepository extends CleanRepository {
     UserInfoSessionMapper userInfoSessionMapper = UserInfoSessionMapper();
     LivingSmartStoresMapper livingSmartStoreMapper = LivingSmartStoresMapper();
     ProductMapper productMapper= ProductMapper();
+    LivingSmartStoresInfoMapper livingSmartStoresInfoMapper= LivingSmartStoresInfoMapper();
+    AddressMapper addressMapper = AddressMapper();
 
 
     CategoryMapper categoryMapper = CategoryMapper();
     CartMapper cartMapper = CartMapper();
+    CartStoreMapper cartStoreMapper = CartStoreMapper();
     CartItemMapper cartItemMapper = CartItemMapper();
+    CartStoreItemMapper cartStoreItemMapper = CartStoreItemMapper();
     ImageStorageMapper imageStorageMapper = ImageStorageMapper();
 
     /* -------------------------------- Databases ------------------------------- */
@@ -72,13 +80,12 @@ class CleanMainRepository extends CleanRepository {
       var data=await restClient.userInfo();
       return userInfoSessionMapper.fromMap(data.data);
     }
-  Future<LivingSmartStores> getStore() async{
+
+
+  //Customer
+  Future<LivingSmartStoreInfo> getStore() async{
       var data=await restClient.getStore();
-      var storeInfo = livingSmartStoreMapper.fromMap(data.data["store_info"]);
-      storeInfo.products = [];
-      data.data["products"].forEach((product){
-        storeInfo.products.add(productMapper.fromMap(product));
-      });
+      var storeInfo = livingSmartStoresInfoMapper.fromMap(data.data);
       return storeInfo;
   }
   Future<bool> addProductToStore(int addProductToStore)async{
@@ -93,7 +100,117 @@ class CleanMainRepository extends CleanRepository {
     var data=await restClient.storeUpdate(name, rate, address, phone, mobile, information, delivery_fee, default_tax, latitude, longitude, closed, delivery);
     return data.success;
   }
-  
+  Future<List<Product>> getProductsGlobal() async{
+    var data = await restClient.getProductsGlobal();
+    List<Product> products = [];
+    data.data.forEach((product){
+        products.add(productMapper.fromMap(product));
+    });
+    return products;
+  }
+  Future<List<LivingSmartStores>> getLStoreList() async {
+    // TODO: implement getLStoreList
+    var data=await restClient.getListAllStores();
+    List<LivingSmartStores> stores = [];
+    data.data.forEach((product){
+        stores.add(livingSmartStoreMapper.fromMap(product));
+    });
+    return stores;
+  }
+  Future<LivingSmartStores> getLStoreInfo(int id) async{
+    var data = await restClient.getProductByStoreId(id);
+    var storeInfo = livingSmartStoreMapper.fromMap(data.data["store_info"]);
+    storeInfo.products = [];
+    data.data["products"].forEach((product){
+      storeInfo.products.add(productMapper.fromMap(product));
+    });
+    return storeInfo;
+  }
+  //Cart
+  Future<List<CartStore>> getCartStores() async{
+    var data = await restClient.getStoresInCart();
+    List<CartStore> stores= [];
+    data.data.forEach((store){
+      stores.add(cartStoreMapper.fromMap(store));
+    });
+    return stores;
+  }
+  Future<List<CartStoreItem>> getCartStoreProducts(int storeId) async{
+    var data = await restClient.getStoreProductCart(storeId);
+    List<CartStoreItem> products= [];
+    data.data.forEach((product){
+      products.add(cartStoreItemMapper.fromMap(product));
+    });
+    return products;
+  }
+  Future<LivingSmartStoreInfo> getListAllStoresProduct(int storeId) async{
+    var data = await restClient.getListAllStoresProduct(storeId);
+    return livingSmartStoresInfoMapper.fromMap(data.data);
+  }
+
+  Future<Product> fetchProductInfoByID(int id) async{
+    var data = await restClient.getProductInfoByID(id);
+    return productMapper.fromMap(data.data);
+  }
+
+  Future<StandardResponse> addProductToCart(int storeId, int productId, int quantity) async{
+    var data = await restClient.addProductToCart(storeId, productId, quantity);
+    return data;
+  }
+  Future<StandardResponse> removeProductFromCart(int storeId, int productId) async{
+    var data = await restClient.removeProductFromCart(storeId, productId);
+    return data;
+  }
+  Future<StandardResponse> deleteCart(int storeId) async{
+    var data = await restClient.deleteStoreCart(storeId);
+    return data;
+  }
+  Future<StandardResponse> checkoutCart() async{
+    var data = await restClient.checkoutCart();
+    return data;
+  }
+
+  //MStore
+  Future<StandardResponse> uploadFrontImage(File file) async{
+    var data = await restClient.uploadStoreFrontImage(file);
+    return data;
+  }
+  Future<StandardResponse> updateStore(String name, String rate, String address, String description, String phone, String mobile, String information, String deliveryFee, String defaultTax, String latitude, String longitude, String closed, String delivery) async{
+    var data = await restClient.storeUpdate(name, rate, address, phone, mobile, information, deliveryFee, defaultTax, latitude, longitude, closed, delivery);
+    return data;
+  }
+
+  //Address
+  Future<StandardResponse> addDeliveryAddress(String address, String lat, String lon, String desc, int isDefault) async{
+    var data = await restClient.addDeliveryAddress(address, lat, lon, desc, isDefault);
+    return data;
+  } 
+  Future<StandardResponse> updateDeliveryAddress(int addressId,String address, String lat, String lon, String desc, int isDefault) async{
+    var data = await restClient.updateDeliveryAddress(addressId, address, lat, lon, desc, isDefault);
+    return data;
+  }
+  Future<LSAddress> getCustomerAddressByID(int id) async{
+    var data = await restClient.getCustomerAddressByID(id);
+    return addressMapper.fromMap(data.data);
+  }
+  Future<LSAddress> getCustomerDefaultAddress() async{
+    var data = await restClient.getCustomerDefaultAddress();
+    return addressMapper.fromMap(data.data);
+  }
+  Future<List<LSAddress>> listCustomerAddresses() async{
+    var data = await restClient.listCustomerAddresses();
+    return addressMapper.fromListMap(data.data);
+  }
+  Future<StandardResponse> deleteCustomerAddress(int id) async{
+    var data = await restClient.deleteCustomerAddress(id);
+    return data;
+  }
+
+
+
+
+
+
 
 
 

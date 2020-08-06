@@ -4,7 +4,9 @@
 
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:clean_data/model/address.dart';
 import 'package:clean_data/model/cart.dart';
 import 'package:clean_data/model/category.dart';
 import 'package:clean_data/model/image_storage.dart';
@@ -82,17 +84,46 @@ abstract class CleanRepository {
   Future<UserInfoSession> lsRegister(String name, String email, String password, String rpass, String mobile);
   Future<StandardResponse> logout();
   Future<UserInfoSession> userInfo();
-  Future<LivingSmartStores> getStore();
+  Future<LivingSmartStoreInfo> getStore();
+  
+
   Future<bool> addProductToStore(int product_id);
   Future<bool> productRemoveToStore(int product_id);
   Future<bool> storeUpdate(String name, String rate, String address, String phone, String mobile, String information, String delivery_fee, String default_tax, String latitude, String longitude, String closed, String delivery);
 
+  //MStore
+  Future<List<Product>> getProductsGlobal();
 
 
+
+
+  //Customer
+  Future<List<LivingSmartStores>> getLStoreList();
+  Future<LivingSmartStores> getLStoreInfo(int id);
   Future<UserSession> login(String email, String password);
   Future<UserSession> fbLogin(String fbId, String firstname, String lastname);
   Future<UserSession> userRegister(String firstName, String lastName, String email, String password);
   Future<UserSession> getUserLogin();
+  //Cart
+  Future<List<CartStore>> getCartStores();
+  Future<List<CartStoreItem>> getCartStoreProducts(int storeId);
+  Future<StandardResponse> addProductToCart(int storeId, int productId, int quantity);
+  Future<StandardResponse> removeProductFromCart(int storeId, int productId);
+  Future<StandardResponse> deleteCart(int storeId);
+  Future<StandardResponse> checkoutCart();
+
+
+  //Unauthenticated
+  Future<Product> fetchProductInfoByID(int id);
+  Future<LivingSmartStoreInfo> getListAllStoresProduct(int storeId);
+
+  //Address
+  Future<StandardResponse> addDeliveryAddress(String address, String lat, String lon, String desc, int isDefault);
+  Future<StandardResponse> updateDeliveryAddress(int addressId,String address, String lat, String lon, String desc, int isDefault);
+  Future<LSAddress> getCustomerAddressByID(int id);
+  Future<LSAddress> getCustomerDefaultAddress();
+  Future<List<LSAddress>> listCustomerAddresses();
+  Future<StandardResponse> deleteCustomerAddress(int id);
 
 
 
@@ -118,6 +149,10 @@ abstract class CleanRepository {
   Future<List<ImageStorage>> getImageByOwnerIdType(String id, String type);
   Future<ImageStorage> newImage(String src, String type, String ownerId);
 
+
+  //MStore
+  Future<StandardResponse> uploadFrontImage(File file);
+  Future<StandardResponse> updateStore(String name, String rate, String address, String description, String phone, String mobile, String information, String deliveryFee, String defaultTax, String latitude, String longitude, String closed, String delivery);
 
 
 
