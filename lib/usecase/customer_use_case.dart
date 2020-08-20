@@ -7,6 +7,7 @@
 import 'package:clean_data/base/architechture.dart';
 import 'package:clean_data/model/cart.dart';
 import 'package:clean_data/model/product.dart';
+import 'package:clean_data/model/transactions.dart';
 import 'package:clean_data/model/userstore.dart';
 import 'package:clean_data/response/standard_response.dart';
 
@@ -18,6 +19,9 @@ class CustomerUseCase extends CleanUseCase {
   
   Future<UserSession> execute(String email, String password) async {
     return await repository.login(email, password);
+  }
+  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me) async{
+    return await repository.lsMobileLogin(mobile, password, remember_me);
   }
 
   Future<List<LivingSmartStores>> getStoresList() async{
@@ -46,8 +50,21 @@ class CustomerUseCase extends CleanUseCase {
   Future<StandardResponse> deleteCart(int storeId) async{
     return await repository.deleteCart(storeId);
   }
-  Future<StandardResponse> checkoutCart() async{
-    return await repository.checkoutCart();
+  Future<StandardResponse> checkoutCart(int storeId, int addressId, String payment_type) async{
+    return await repository.checkoutCart(storeId, addressId, payment_type);
   }
+
+
+  //Transactions
+  Future<List<UserTransaction>> getTransactions() async{
+    return await repository.getUserTransactions();
+  }
+  Future<MStoreTransactionContent> getTransactionContent(String transactionCode) async{
+    return await repository.getUserTransactionContent(transactionCode);
+  }
+  Future<StandardResponse> cancelTransaction(String transCode, String reason) async{
+    return await repository.cancelUserTransaction(transCode);
+  }
+
 
 }

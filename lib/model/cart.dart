@@ -31,7 +31,7 @@ class CartStoreItem extends CleanModel{
   int featured;
   String category;
   int deliverable;
-  CartStoreItem({this.id, this.user_id, this.store_id, this.product_id, this.quantity, this.created_at, this.updated_at, this.image, this.name, this.weight_size, this.stock_count, this.price, this.discounted_price, this.description, this.featured, this.category, this.deliverable});
+  CartStoreItem({this.id=0, this.user_id=0, this.store_id=0, this.product_id=0, this.quantity=0, this.created_at="", this.updated_at="", this.image="", this.name="", this.weight_size="", this.stock_count=0, this.price="", this.discounted_price="0.00", this.description="", this.featured=0, this.category="", this.deliverable=0});
 }
 
 

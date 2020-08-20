@@ -23,6 +23,16 @@ class RestClient {
       });
       return StandardResponse.fromJson(response.data);
     }
+    Future<StandardResponse> lsMobileLogin(String mobile, String password, bool remember_me) async{
+      Response response = await _dio.post("/login/mobile", data: {
+        "mobile": mobile,
+        "password": password,
+        "remember_me":remember_me
+      });
+      return StandardResponse.fromJson(response.data);
+    }
+
+
     Future<StandardResponse> lSmartRegister(String name, String email, String password, String rpass, String mobile) async {
       Response response = await _dio.post("/register", data: {
         "name":name,
@@ -41,6 +51,39 @@ class RestClient {
       Response response = await _dio.get("/user/info");
       return StandardResponse.fromJson(response.data);
     }
+
+    Future<StandardResponse> forgotPasswordEmail(String email) async{
+      Response response = await _dio.post("/password/forgot", data:jsonEncode({"email":email}));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> restPassword(String email, String password, String password_confirmation, int pin) async{
+      Response response = await _dio.post("/password/reset", data:jsonEncode({
+        "email":email,
+        "password":password,
+        "password_confirmation":password_confirmation,
+        "pin":pin
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    
+    Future<StandardResponse> changePassword(String password, String password_confirmation) async {
+      Response response = await _dio.post("/user/password", data:jsonEncode({
+        "password":password,
+        "password_confirmation":password_confirmation
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> uploadUserImage(File image) async {
+      MultipartFile imageMF = await MultipartFile.fromFile(image.path);
+      var data = FormData.fromMap({
+        "image": imageMF,
+      });
+      Response response = await _dio.post("/user/image", data: data);
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
 
     //TODO: MStore
     Future<StandardResponse> getStore() async {
@@ -122,7 +165,8 @@ class RestClient {
       Response response = await _dio.post("/cart/add", data:jsonEncode({
         "store_id":storeId,
         "product_id":prodId,
-        "quantity":quantity
+        "quantity":quantity,
+        "isDiscount":false
       }));
       return StandardResponse.fromJson(response.data);
     }
@@ -139,8 +183,12 @@ class RestClient {
       }));
       return StandardResponse.fromJson(response.data);
     }
-    Future<StandardResponse> checkoutCart() async{
-      Response response = await _dio.post("/cart/checkout");
+    Future<StandardResponse> checkoutCart(int storeId, int addressId, String payment_type) async{
+      Response response = await _dio.post("/cart/checkout", data:jsonEncode({
+        "store_id":storeId,
+        "user_address":addressId,
+        "payment_type":payment_type,
+      }));
       return StandardResponse.fromJson(response.data);
     }
 
@@ -179,11 +227,95 @@ class RestClient {
       return StandardResponse.fromJson(response.data);
     }
     Future<StandardResponse> deleteCustomerAddress(int id) async{
-      Response response = await _dio.delete("/customer/addresses", data:jsonEncode({
+      Response response = await _dio.delete("/customer/address", data:jsonEncode({
         "address_id":id
       }));
       return StandardResponse.fromJson(response.data);
     }
+    // User Transactions
+    Future<StandardResponse> getUserTransactions() async{
+      Response response = await _dio.get("/transactions/all");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getUserTransactionContent(String transCode) async{
+      Response response = await _dio.get("/transaction/"+transCode);
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> cancelUserTransaction(String transCode) async{
+      Response response = await _dio.put("/transaction/cancel", data:jsonEncode({
+        "transaction_code":transCode
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
+
+    //Transactions
+    Future<StandardResponse> getTransactions() async{
+      Response response = await _dio.get("/store/transactions/all");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getTransactionContent(String transactionID) async{
+      Response response = await _dio.get("/store/transaction/"+transactionID);
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> cancelTransaction(String transactionCode, String reason) async{
+      Response response = await _dio.put("/store/transaction/cancel", data:jsonEncode({
+        "transaction_code":transactionCode,
+        "reason":reason
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> processTransaction(String transactionCode) async{
+      Response response = await _dio.put("/store/transaction/process", data:jsonEncode({
+        "transaction_code":transactionCode,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> readyForPickupTransaction(String transCode) async{
+      Response response = await _dio.put("/store/transaction/ready", data:jsonEncode({
+        "transaction_code":transCode,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+
+    //Driver
+    Future<StandardResponse> listAvailableDeliveries() async{
+      Response response = await _dio.get("/rider/deliveries/available");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> listCompletedDeliveries() async{
+      Response response = await _dio.get("/rider/deliveries/completed");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> listCurrentDelivery() async{
+      Response response = await _dio.get("/rider/delivery/current");
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> getRiderDeliveryDetails(String transCode) async{
+      Response response = await _dio.get("/rider/delivery/details/"+transCode);
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> riderAcceptDelivery(String transCode, int store_id, int customerId) async{
+      Response response = await _dio.put("/rider/delivery/take", data:jsonEncode({
+        "transaction_code":transCode,
+        "store_id":store_id,
+        "customer_id": customerId,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> triggerDelivered(String transCode) async{
+      Response response = await _dio.put("/rider/delivery/delivered", data:jsonEncode({
+        "transaction_code":transCode,
+      }));
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+
+
+
 
 
 
@@ -347,6 +479,7 @@ class RestClient {
     });
     return StandardResponse.fromJson(response.data);
   }
+  
 
 
 

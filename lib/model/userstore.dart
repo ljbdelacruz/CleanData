@@ -43,8 +43,8 @@ class LivingSmartStores extends CleanModel {
   String delivery_fee;
   String admin_commission;
   String default_tax;
-  double latitude;
-  double longitude;
+  String latitude;
+  String longitude;
   int closed;
   int delivery;
   int user_id;
@@ -53,6 +53,6 @@ class LivingSmartStores extends CleanModel {
   String updated_at;
   List<Product> products = [];
 
-  LivingSmartStores({this.id=0, this.image="", this.name="", this.rate="", this.address="", this.description="", this.phone="", this.mobile="", this.information="", this.delivery_fee="", this.admin_commission="", this.default_tax="", this.longitude = 0.0, this.latitude = 0.0, this.closed = 0, this.delivery=0, this.user_id=0, this.created_by=0, this.created_at="", this.updated_at=""});
+  LivingSmartStores({this.id=0, this.image="", this.name="", this.rate="", this.address="", this.description="", this.phone="", this.mobile="", this.information="", this.delivery_fee="", this.admin_commission="", this.default_tax="", this.longitude = "", this.latitude = "", this.closed = 0, this.delivery=0, this.user_id=0, this.created_by=0, this.created_at="", this.updated_at=""});
 
 }

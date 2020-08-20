@@ -10,7 +10,8 @@ class CartStoreMapper extends CleanMapper<CartStore> {
   @override
     CartStore fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-      return CartStore(id:map["id"], image:map["image"], name:map["name"], address: map["address"], phone:map["phone"], mobile:map["mobile"], delivery_fee: map["delivery_fee"], product_count: map["product_count"]);
+      print(map.toString());
+      return CartStore(id:map["id"], image:map["image"].toString(), name:map["name"].toString(), address: map["address"].toString(), phone:map["phone"].toString(), mobile:map["mobile"].toString(), delivery_fee: map["delivery_fee"].toString(), product_count: map["product_count"]);
     }
     @override
     Map<String, dynamic> toMap(CartStore object) {
@@ -22,7 +23,12 @@ class CartStoreItemMapper extends CleanMapper<CartStoreItem> {
   @override
     CartStoreItem fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-      return CartStoreItem(id:map["id"], user_id:map["user_id"], store_id:map["store_id"], product_id:map["product_id"], quantity:map["quantity"], created_at:map["created_at"], updated_at:map["updated_at"], image:map["image"], name: map["name"], weight_size: map["weight_size"], stock_count: map["stock_count"], price:map["price"], discounted_price:map["discounted_price"], description:map["description"], featured: int.parse(map["featured"].toString()), category: map["category"], deliverable: int.parse(map["deliverable"]));
+      print(map.toString());
+      try{
+        return CartStoreItem(id:map["id"], quantity:map["quantity"], image:map["image"], name: map["name"], weight_size: map["weight_size"], price:map["price"], description:map["description"], category: map["category"]);
+      }catch(e){
+        print(e.toString());
+      }
     }
     @override
     Map<String, dynamic> toMap(CartStoreItem object) {

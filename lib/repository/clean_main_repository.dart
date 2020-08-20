@@ -2,14 +2,19 @@
 
 
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:clean_data/base/architechture.dart';
 import 'package:clean_data/config/constant.dart';
 import 'package:clean_data/mapper/address_mapper.dart';
+import 'package:clean_data/mapper/delivery_mapper.dart';
+import 'package:clean_data/mapper/transactions_mapper.dart';
 import 'package:clean_data/mapper/user_session_data_mapper.dart';
 import 'package:clean_data/mapper/user_store_mapper.dart';
 import 'package:clean_data/model/address.dart';
+import 'package:clean_data/model/delivery.dart';
+import 'package:clean_data/model/transactions.dart';
 import 'package:clean_data/model/userstore.dart';
 import 'package:clean_data/response/standard_response.dart';
 import 'package:sembast/sembast.dart';
@@ -47,6 +52,12 @@ class CleanMainRepository extends CleanRepository {
     CartItemMapper cartItemMapper = CartItemMapper();
     CartStoreItemMapper cartStoreItemMapper = CartStoreItemMapper();
     ImageStorageMapper imageStorageMapper = ImageStorageMapper();
+    MStoreTransactionMapper mstoreTransMapper = MStoreTransactionMapper();
+    MStoreTransactionContentMapper mstoreTransactionContentMapper = MStoreTransactionContentMapper();
+    RiderDeliveryMapper riderDeliveryMapper = RiderDeliveryMapper();
+    RiderCurrentDeliveryMapper riderCurrentDeliveryMapper= RiderCurrentDeliveryMapper();
+    RiderCurrentDeliveryInfoMapper riderCurrentDeliveryInfoMapper=RiderCurrentDeliveryInfoMapper();
+    UserTransactionMapper userTransMapper = UserTransactionMapper();
 
     /* -------------------------------- Databases ------------------------------- */
     UserSessionDb sessionDb;
@@ -67,10 +78,18 @@ class CleanMainRepository extends CleanRepository {
       return response;
     }
     @override
-    Future<UserInfoSession> lsRegister(String name, String email, String password, String rpass, String mobile) async{
-      var data=await restClient.lSmartRegister(name, email, password, rpass, mobile);
-      var response = userInfoSessionMapper.fromMapRegister(data.data);
+    Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me) async{
+      var data=await restClient.lsMobileLogin(mobile, password, remember_me);
+      var response = userSDataMapper.fromMap(data.data);
+      Constants.instance.session=response;
       return response;
+    }
+
+    @override
+    Future<StandardResponse> lsRegister(String name, String email, String password, String rpass, String mobile) async{
+      var data=await restClient.lSmartRegister(name, email, password, rpass, mobile);
+      // var response = userInfoSessionMapper.fromMapRegister(data.data);
+      return data;
     }
     Future<StandardResponse> logout()async{
       var data=await restClient.logout();
@@ -79,6 +98,22 @@ class CleanMainRepository extends CleanRepository {
     Future<UserInfoSession> userInfo()async{
       var data=await restClient.userInfo();
       return userInfoSessionMapper.fromMap(data.data);
+    }
+    Future<StandardResponse> changePassword(String password, String password_confirmation) async {
+      var data = await restClient.changePassword(password, password_confirmation);
+      return data;
+    }
+    Future<StandardResponse> uploadUserImage(File image) async {
+      var data = await restClient.uploadUserImage(image);
+      return data;
+    }
+    Future<StandardResponse> forgotPasswordEmail(String email) async{
+      var data = await restClient.forgotPasswordEmail(email);
+      return data;
+    }
+    Future<StandardResponse> restPassword(String email, String password, String password_confirmation, int pin) async{
+      var data = await restClient.restPassword(email, password, password_confirmation, pin);
+      return data;
     }
 
 
@@ -126,6 +161,20 @@ class CleanMainRepository extends CleanRepository {
     });
     return storeInfo;
   }
+  //User Transaction
+  Future<List<UserTransaction>> getUserTransactions() async{
+    var data = await restClient.getUserTransactions();
+    return userTransMapper.fromListMap(data.data);
+  }
+  Future<MStoreTransactionContent> getUserTransactionContent(String transCode) async{
+    var data = await restClient.getUserTransactionContent(transCode);
+    return mstoreTransactionContentMapper.fromMap(data.data);
+  }
+  Future<StandardResponse> cancelUserTransaction(String transCode) async{
+    return await restClient.cancelUserTransaction(transCode);
+  }
+
+
   //Cart
   Future<List<CartStore>> getCartStores() async{
     var data = await restClient.getStoresInCart();
@@ -165,8 +214,8 @@ class CleanMainRepository extends CleanRepository {
     var data = await restClient.deleteStoreCart(storeId);
     return data;
   }
-  Future<StandardResponse> checkoutCart() async{
-    var data = await restClient.checkoutCart();
+  Future<StandardResponse> checkoutCart(int storeId, int addressId, String payment_type) async{
+    var data = await restClient.checkoutCart(storeId, addressId, payment_type);
     return data;
   }
 
@@ -206,10 +255,58 @@ class CleanMainRepository extends CleanRepository {
     return data;
   }
 
-
-
-
-
+  Future<List<MStoreTransaction>> getTransactions() async{
+    var data = await restClient.getTransactions();
+    return mstoreTransMapper.fromListMap(data.data);
+  }
+  Future<MStoreTransactionContent> getTransactionContent(String transactionCode) async{
+    var data = await restClient.getTransactionContent(transactionCode);
+    return mstoreTransactionContentMapper.fromMap(data.data);
+  }
+  Future<StandardResponse> cancelTransaction(String transCode, String reason) async{
+    var data = await restClient.cancelTransaction(transCode, reason);
+    return data;
+  }
+  Future<StandardResponse> processTransaction(String transCode) async{
+    var data = await restClient.processTransaction(transCode);
+    return data;
+  }
+  Future<StandardResponse> readyForPickupTransaction(String transCode) async{
+    var data = await restClient.readyForPickupTransaction(transCode);
+    return data;
+  }
+  //Driver 
+  Future<List<RiderDelivery>> listAvailableDeliveries() async{
+    try{
+      var data = await restClient.listAvailableDeliveries();
+      print(data.data.toString());
+      return riderDeliveryMapper.fromListMap(data.data);
+    }catch(e){
+      return [];
+    }
+  }
+  Future<List<RiderDelivery>> listCompletedDeliveries() async{
+    var data = await restClient.listCompletedDeliveries();
+    return riderDeliveryMapper.fromListMap(data.data);
+  }
+  Future<RiderCurrentDelivery> listCurrentDelivery() async{
+    var data = await restClient.listCurrentDelivery();
+    return riderCurrentDeliveryMapper.fromMap(data.data);
+  }
+  Future<RiderCurrentDeliveryInfo> getRiderDeliveryDetails(String transCode) async{
+    var data = await restClient.getRiderDeliveryDetails(transCode);
+    print("getRiderDeliveryDetails endpoint");
+    print(data.data.toString());
+    return riderCurrentDeliveryInfoMapper.fromMap(data.data);
+  }
+  Future<StandardResponse> riderAcceptDelivery(String transCode, int store_id, int customerId) async{
+    var data = await restClient.riderAcceptDelivery(transCode, store_id, customerId);
+    return data;
+  }
+  Future<StandardResponse> triggerDelivered(String transCode) async{
+    var data = await restClient.triggerDelivered(transCode);
+    return data;
+  }
 
 
 

@@ -27,8 +27,6 @@ class LivingSmartStoresInfoMapper extends CleanMapper<LivingSmartStoreInfo> {
   @override
   LivingSmartStoreInfo fromMap(Map<String, dynamic> map) {
     try{
-      print("getStoreMap Data");
-      print(map.toString());
       return LivingSmartStoreInfo(livingSmartStoreMapper.fromMap(map["store_info"]), productMapper.fromListMap(map["products"]));
     }catch(e){
       print("Error mapping from LivingSmartStoreInfo");
@@ -49,9 +47,7 @@ class LivingSmartStoresMapper extends CleanMapper<LivingSmartStores> {
   @override
   LivingSmartStores fromMap(Map<String, dynamic> map) {
     try{
-      print("getStoreMap Data");
-      print(map.toString());
-      return LivingSmartStores(id: int.parse(map["id"].toString()), image:map["image"].toString(), name:map["name"].toString(), description:map["description"].toString(), address:map["address"].toString(), phone:map["phone"].toString(), mobile:map["mobile"].toString());
+      return LivingSmartStores(id: int.parse(map["id"].toString()), image:map["image"].toString(), name:map["name"].toString(), description:map["description"].toString(), address:map["address"].toString(), phone:map["phone"].toString(), mobile:map["mobile"].toString(), information:map["information"].toString(), delivery_fee:map["delivery_fee"].toString(), admin_commission:map["admin_commission"].toString(), default_tax:map["default_tax"], longitude: map["longitude"].toString(), latitude: map["latitude"].toString(), closed: map["closed"], delivery: map["delivery"]);
     }catch(e){
       print("Error mapping from LivingSmartStore");
       print(e.toString());

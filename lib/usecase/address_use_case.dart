@@ -16,7 +16,6 @@ class AddressUseCase extends CleanUseCase {
   }
   Future<StandardResponse> updateDeliveryAddress(int addressId,String address, String lat, String lon, String desc, int isDefault) async{
    return await repository.updateDeliveryAddress(addressId, address, lat, lon, desc, isDefault);
-    
   }
   Future<LSAddress> getCustomerAddressByID(int id) async{
     return await repository.getCustomerAddressByID(id);

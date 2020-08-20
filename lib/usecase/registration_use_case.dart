@@ -9,7 +9,7 @@ class RegistrationUseCase extends CleanUseCase {
   final CleanRepository repository;
   RegistrationUseCase(this.repository);
   
-  Future<UserInfoSession> register(String name, String email, String password, String rpass, String mobile){
+  Future<StandardResponse> register(String name, String email, String password, String rpass, String mobile){
     return repository.lsRegister(name, email, password, rpass, mobile);
   }
   

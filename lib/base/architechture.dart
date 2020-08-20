@@ -9,8 +9,10 @@ import 'dart:io';
 import 'package:clean_data/model/address.dart';
 import 'package:clean_data/model/cart.dart';
 import 'package:clean_data/model/category.dart';
+import 'package:clean_data/model/delivery.dart';
 import 'package:clean_data/model/image_storage.dart';
 import 'package:clean_data/model/product.dart';
+import 'package:clean_data/model/transactions.dart';
 import 'package:clean_data/model/user_session.dart';
 import 'package:clean_data/model/userstore.dart';
 import 'package:clean_data/response/standard_response.dart';
@@ -81,11 +83,16 @@ abstract class CleanPresenter {
 
 abstract class CleanRepository {
   Future<UserSessionData> lsLogin(String email, String password, remember_me);
-  Future<UserInfoSession> lsRegister(String name, String email, String password, String rpass, String mobile);
+  Future<StandardResponse> lsRegister(String name, String email, String password, String rpass, String mobile);
+  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me);
   Future<StandardResponse> logout();
   Future<UserInfoSession> userInfo();
   Future<LivingSmartStoreInfo> getStore();
-  
+  Future<StandardResponse> changePassword(String password, String password_confirmation);
+  Future<StandardResponse> uploadUserImage(File image);
+  Future<StandardResponse> forgotPasswordEmail(String email);
+  Future<StandardResponse> restPassword(String email, String password, String password_confirmation, int pin);
+
 
   Future<bool> addProductToStore(int product_id);
   Future<bool> productRemoveToStore(int product_id);
@@ -110,7 +117,7 @@ abstract class CleanRepository {
   Future<StandardResponse> addProductToCart(int storeId, int productId, int quantity);
   Future<StandardResponse> removeProductFromCart(int storeId, int productId);
   Future<StandardResponse> deleteCart(int storeId);
-  Future<StandardResponse> checkoutCart();
+  Future<StandardResponse> checkoutCart(int storeId, int productId, String payment_type);
 
 
   //Unauthenticated
@@ -125,6 +132,24 @@ abstract class CleanRepository {
   Future<List<LSAddress>> listCustomerAddresses();
   Future<StandardResponse> deleteCustomerAddress(int id);
 
+  //Transactions
+  Future<List<MStoreTransaction>> getTransactions();
+  Future<MStoreTransactionContent> getTransactionContent(String transactionCode);
+  Future<StandardResponse> cancelTransaction(String transCode, String reason);
+  Future<StandardResponse> processTransaction(String transCode);
+  Future<StandardResponse> readyForPickupTransaction(String transCode);
+
+
+  //MCS Rider Transaction
+  Future<List<RiderDelivery>> listAvailableDeliveries();
+  Future<List<RiderDelivery>> listCompletedDeliveries();
+  Future<RiderCurrentDelivery> listCurrentDelivery();
+  Future<RiderCurrentDeliveryInfo> getRiderDeliveryDetails(String transCode);
+  Future<StandardResponse> riderAcceptDelivery(String transCode, int store_id, int customerId);
+  Future<StandardResponse> triggerDelivered(String transCode);
+
+
+  
 
 
   Future<List<FoodyCategory>> getCategoryType(String category);
@@ -154,7 +179,10 @@ abstract class CleanRepository {
   Future<StandardResponse> uploadFrontImage(File file);
   Future<StandardResponse> updateStore(String name, String rate, String address, String description, String phone, String mobile, String information, String deliveryFee, String defaultTax, String latitude, String longitude, String closed, String delivery);
 
-
+  //User Transaction
+  Future<List<UserTransaction>> getUserTransactions();
+  Future<MStoreTransactionContent> getUserTransactionContent(String transCode);
+  Future<StandardResponse> cancelUserTransaction(String transCode);
 
 }
 
