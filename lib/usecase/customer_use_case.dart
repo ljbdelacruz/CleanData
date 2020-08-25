@@ -20,8 +20,8 @@ class CustomerUseCase extends CleanUseCase {
   Future<UserSession> execute(String email, String password) async {
     return await repository.login(email, password);
   }
-  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me) async{
-    return await repository.lsMobileLogin(mobile, password, remember_me);
+  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me, String device_token) async{
+    return await repository.lsMobileLogin(mobile, password, remember_me, device_token);
   }
 
   Future<List<LivingSmartStores>> getStoresList() async{

@@ -11,7 +11,6 @@ class RiderDeliveryMapper  extends CleanMapper<RiderDelivery> {
   @override
     RiderDelivery fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-
       try{
         String caddress = map["customer_address"] == null ? map["delivery_address"].toString() : map["customer_address"].toString();
         String clat = map["customer_latitude"] == null ? map["delivery_latitude"].toString() : map["customer_latitude"].toString();

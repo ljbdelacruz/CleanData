@@ -17,8 +17,8 @@ class UserAuthUseCase extends CleanUseCase {
   Future<UserSessionData> login(String email, String password, bool rememberMe){
     return repository.lsLogin(email, password, rememberMe);
   }
-  Future<UserSessionData> mobileLogin(String mobile, String password, bool rememberMe){
-    return repository.lsMobileLogin(mobile, password, rememberMe);
+  Future<UserSessionData> mobileLogin(String mobile, String password, bool rememberMe, String device_token){
+    return repository.lsMobileLogin(mobile, password, rememberMe, device_token);
   }
   Future<UserInfoSession> getUserInfo(){
     return repository.userInfo();

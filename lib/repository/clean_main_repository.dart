@@ -78,8 +78,8 @@ class CleanMainRepository extends CleanRepository {
       return response;
     }
     @override
-    Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me) async{
-      var data=await restClient.lsMobileLogin(mobile, password, remember_me);
+    Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me, String device_token) async{
+      var data=await restClient.lsMobileLogin(mobile, password, remember_me, device_token);
       var response = userSDataMapper.fromMap(data.data);
       Constants.instance.session=response;
       return response;
@@ -187,6 +187,7 @@ class CleanMainRepository extends CleanRepository {
   Future<List<CartStoreItem>> getCartStoreProducts(int storeId) async{
     var data = await restClient.getStoreProductCart(storeId);
     List<CartStoreItem> products= [];
+    print(data.data.toString());
     data.data.forEach((product){
       products.add(cartStoreItemMapper.fromMap(product));
     });
@@ -307,6 +308,20 @@ class CleanMainRepository extends CleanRepository {
     var data = await restClient.triggerDelivered(transCode);
     return data;
   }
+
+   Future<List<Product>> searchProductsAllStoreCategory(String category,String product) async{
+     var data = await restClient.searchProductsAllStoreCategory(category, product);
+     return productMapper.fromListMap(data.data);
+   }
+    Future<List<Product>> searchProductsStore(int storeID,String category, String product) async{
+      var data = await restClient.searchProductsStore(storeID, category, product);
+       return productMapper.fromListMap(data.data);
+    }
+
+   Future<List<FoodyCategory>> getCategoriesList() async{
+     var data = await restClient.getProductCategories();
+     return categoryMapper.fromListMap(data.data);
+   }
 
 
 

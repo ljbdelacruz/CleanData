@@ -23,11 +23,12 @@ class RestClient {
       });
       return StandardResponse.fromJson(response.data);
     }
-    Future<StandardResponse> lsMobileLogin(String mobile, String password, bool remember_me) async{
+    Future<StandardResponse> lsMobileLogin(String mobile, String password, bool remember_me, String device_token) async{
       Response response = await _dio.post("/login/mobile", data: {
         "mobile": mobile,
         "password": password,
-        "remember_me":remember_me
+        "remember_me":remember_me,
+        "device_token":device_token
       });
       return StandardResponse.fromJson(response.data);
     }
@@ -309,6 +310,22 @@ class RestClient {
       Response response = await _dio.put("/rider/delivery/delivered", data:jsonEncode({
         "transaction_code":transCode,
       }));
+      return StandardResponse.fromJson(response.data);
+    }
+
+    //product search
+    Future<StandardResponse> searchProductsAllStoreCategory(String category,String product) async{
+      Response response = await _dio.get("/products/search?category="+category+"&product="+product);
+      return StandardResponse.fromJson(response.data);
+    }
+    Future<StandardResponse> searchProductsStore(int storeID,String category, String product) async{
+      Response response = await _dio.get("/store/"+storeID.toString()+"/search?category="+category+"&product="+product);
+      return StandardResponse.fromJson(response.data);
+    }
+
+
+    Future<StandardResponse> getProductCategories() async{
+      Response response = await _dio.get("/categories/list");
       return StandardResponse.fromJson(response.data);
     }
 

@@ -84,7 +84,7 @@ abstract class CleanPresenter {
 abstract class CleanRepository {
   Future<UserSessionData> lsLogin(String email, String password, remember_me);
   Future<StandardResponse> lsRegister(String name, String email, String password, String rpass, String mobile);
-  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me);
+  Future<UserSessionData> lsMobileLogin(String mobile, String password, bool remember_me, String device_token);
   Future<StandardResponse> logout();
   Future<UserInfoSession> userInfo();
   Future<LivingSmartStoreInfo> getStore();
@@ -123,6 +123,8 @@ abstract class CleanRepository {
   //Unauthenticated
   Future<Product> fetchProductInfoByID(int id);
   Future<LivingSmartStoreInfo> getListAllStoresProduct(int storeId);
+  Future<List<Product>> searchProductsAllStoreCategory(String category,String product);
+  Future<List<Product>> searchProductsStore(int storeID,String category, String product);
 
   //Address
   Future<StandardResponse> addDeliveryAddress(String address, String lat, String lon, String desc, int isDefault);
@@ -147,6 +149,11 @@ abstract class CleanRepository {
   Future<RiderCurrentDeliveryInfo> getRiderDeliveryDetails(String transCode);
   Future<StandardResponse> riderAcceptDelivery(String transCode, int store_id, int customerId);
   Future<StandardResponse> triggerDelivered(String transCode);
+
+  Future<List<FoodyCategory>> getCategoriesList();
+
+
+  
 
 
   

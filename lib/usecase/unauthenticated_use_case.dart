@@ -16,5 +16,10 @@ class UnauthenticatedUseCase extends CleanUseCase {
   Future<LivingSmartStoreInfo> getListAllStoresProduct(int storeId) async{
     return await repository.getListAllStoresProduct(storeId);
   }
-  
+  Future<List<Product>> searchProductsAllStoreCategory(String category,String product) async{
+    return await repository.searchProductsAllStoreCategory(category,product);
+  }
+  Future<List<Product>> searchStoreProducts(int storeID,String category,String product) async{
+    return await repository.searchProductsStore(storeID,category,product);
+  }
 }

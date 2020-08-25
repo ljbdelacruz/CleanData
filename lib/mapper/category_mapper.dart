@@ -8,7 +8,7 @@ class CategoryMapper extends CleanMapper<FoodyCategory>{
    @override
     FoodyCategory fromMap(Map<String,dynamic> map) {
       // TODO: implement fromMap
-      return FoodyCategory(map["id"], map["description"], map["value"], map["categoryType"]);
+      return FoodyCategory.ls(map["category_name"], map["category_image"]);
     }
     @override
     Map<String, dynamic> toMap(FoodyCategory object) {
@@ -16,3 +16,5 @@ class CategoryMapper extends CleanMapper<FoodyCategory>{
       return {"id":object.id, "desc":object.description, "value":object.value, "categoryType":object.categoryType};
     }
 }
+
+

@@ -8,6 +8,7 @@ import 'package:clean_data/rest_client.dart';
 import 'package:clean_data/usecase/address_use_case.dart';
 import 'package:clean_data/usecase/customer_use_case.dart';
 import 'package:clean_data/usecase/fb_login_use_case.dart';
+import 'package:clean_data/usecase/general_data_use_case.dart';
 import 'package:clean_data/usecase/login_use_case.dart';
 import 'package:clean_data/usecase/mcsrider_use_case.dart';
 import 'package:clean_data/usecase/mstore_use_case.dart';
@@ -55,6 +56,9 @@ class DataInstantiator extends CleanDataInstantiator {
         () => MStoreTransactionUseCase(repository));
     GetIt.I.registerLazySingleton<MCSRiderUseCase>(
         () => MCSRiderUseCase(repository));
+    GetIt.I.registerLazySingleton<GeneralDataUseCase>(
+        () => GeneralDataUseCase(repository));
+    
     
     
   }

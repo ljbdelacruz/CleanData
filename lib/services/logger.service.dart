@@ -2,7 +2,7 @@
 
 
 class LoggerService{
-  static bool isDemo=false;
+  static bool isDemo=true;
   static log(String data){
     if(isDemo){
       print(data);

@@ -5,5 +5,9 @@ class FoodyCategory extends CleanModel{
   String description;
   String value;
   String categoryType;
+  String category_name;
+  String category_image;
+
   FoodyCategory(this.id, this.description, this.value, this.categoryType);
+  FoodyCategory.ls(this.category_name, this.category_image);
 }
